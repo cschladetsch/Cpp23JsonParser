@@ -1,33 +1,32 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.10)
 
-# Explicitly set the C++ compiler to g++
-set(CMAKE_CXX_COMPILER g++)
+# Project name and version
+project(Cpp23Json VERSION 1.0)
 
-project(FastJsonParser VERSION 1.0 LANGUAGES CXX)
+# Set the C and C++ compilers to gcc and g++
+set(CMAKE_C_COMPILER "/usr/bin/gcc")
+set(CMAKE_CXX_COMPILER "/usr/bin/g++")
 
-# Specify the C++ standard
+# Set the C++ standard to C++23
 set(CMAKE_CXX_STANDARD 23)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-# Add compiler warnings
+# Add the sources for the project
+add_executable(json_parser main.cpp json_parser.cpp)
+
+# Add the sources for the test executable
+add_executable(test_json_parser test_json_parser.cpp json_parser.cpp)
+
+# Include directories for any headers (if necessary, add your own paths here)
+include_directories(${CMAKE_SOURCE_DIR}/include)
+
+# Link pthread for threading support
+find_package(Threads REQUIRED)
+target_link_libraries(test_json_parser PRIVATE Threads::Threads)
+
+# Optional: Enable extra warnings
 add_compile_options(-Wall -Wextra -Wpedantic)
 
-# Add the main executable
-add_executable(json_parser
-    main.cpp
-    json_parser.cpp
-)
+# Optional: If you want to enable debugging flags
+# set(CMAKE_BUILD_TYPE Debug)
 
-# Add the test executable
-add_executable(test_json_parser
-    test_json_parser.cpp
-    json_parser.cpp
-)
-
-# Install the targets (optional)
-install(TARGETS json_parser test_json_parser DESTINATION bin)
-
-# Enable testing
-enable_testing()
-add_test(NAME JsonParserTests COMMAND test_json_parser)

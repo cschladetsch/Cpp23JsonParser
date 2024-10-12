@@ -1,7 +1,8 @@
+// test_json_parser.cpp
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 #include "json_parser.hpp"
-#include <cmath>
+#include "spinner.hpp"  // Include the spinner
 
 TEST_CASE("JSON Parser Tests", "[json]") {
     SECTION("Parse null") {
@@ -96,7 +97,16 @@ TEST_CASE("JSON Parser Tests", "[json]") {
             REQUIRE(nest_arr[1].get<json::Array>()[1].get<double>() == Approx(4.0));
         }
         SECTION("Large array") {
-            auto large_array = json::Parser::parse(std::string("[") + std::string(1000, '0') + "]");
+            std::string large_array_input = "[";
+            for (int i = 0; i < 1000; ++i) {
+                large_array_input += "0";
+                if (i != 999) {
+                    large_array_input += ", ";  // Add commas between elements
+                }
+            }
+            large_array_input += "]";
+
+            auto large_array = json::Parser::parse(large_array_input);
             REQUIRE(large_array.get<json::Array>().size() == 1000);
         }
     }
@@ -157,3 +167,4 @@ TEST_CASE("JSON Parser Tests", "[json]") {
         }
     }
 }
+
