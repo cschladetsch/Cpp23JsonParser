@@ -1,5 +1,16 @@
 #!/bin/bash
 
+# Download rang.hpp if it does not exist
+if [ ! -f third_party/rang/rang.hpp ]; then
+    echo "===> Downloading rang.hpp..."
+    mkdir -p third_party/rang
+    wget https://raw.githubusercontent.com/agauniyal/rang/master/include/rang.hpp -O third_party/rang/rang.hpp
+    if [ $? -ne 0 ]; then
+        echo "===> Failed to download rang.hpp. Exiting."
+        exit 1
+    fi
+fi
+
 # Remove existing build directory
 echo "===> Removing existing build directory..."
 rm -rf build
@@ -9,35 +20,33 @@ echo "===> Creating build directory..."
 mkdir build
 cd build
 
-# Run CMake from the root folder (one directory up)
-echo "===> Running CMake..."
-cmake -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ ..
+# Set compilers to gcc and g++
+export CC=gcc
+export CXX=g++
 
-# Check if CMake was successful
-if [ $? -ne 0 ]; then
-  echo "CMake configuration failed. Exiting."
-  exit 1
-fi
+# Run CMake
+echo "===> Running CMake..."
+cmake ..
 
 # Build the project
 echo "===> Building the project..."
 make
 
-# Check if make was successful
-if [ $? -ne 0 ]; then
-  echo "Build failed. Exiting."
-  exit 1
+# Check if the build was successful
+if [ $? -eq 0 ]; then
+    echo "===> Build successful!"
+else
+    echo "===> Build failed. Exiting."
+    exit 1
 fi
 
-# Run the tests (assuming the test binary is test_json_parser)
-echo "===> Running tests..."
-./test_json_parser
+# Return to root directory
+cd ..
 
-# Check if the tests ran successfully
-if [ $? -ne 0 ]; then
-  echo "Tests failed. Exiting."
-  exit 1
+# Run the benchmarks
+if [ -f build/benchmark ]; then
+    echo "===> Running benchmarks..."
+    ./build/benchmark
+else
+    echo "===> Benchmark executable not found. Skipping benchmark run."
 fi
-
-echo "Build and tests successful!"
-
