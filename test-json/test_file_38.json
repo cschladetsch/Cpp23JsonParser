@@ -1,0 +1,16 @@
+{
+    "event": {
+        "title": "Event_38",
+        "location": "Location_5",
+        "participants": [
+            "Participant_0",
+            "Participant_1",
+            "Participant_2",
+            "Participant_3",
+            "Participant_4",
+            "Participant_5",
+            "Participant_6"
+        ],
+        "date": "2024-08-07"
+    }
+}

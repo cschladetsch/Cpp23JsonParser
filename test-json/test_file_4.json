@@ -1,0 +1,22 @@
+{
+    "person": {
+        "first_name": "FirstName_4",
+        "last_name": "LastName_4",
+        "age": 54,
+        "email": "test_4@example.com"
+    },
+    "transactions": [
+        {
+            "amount": 420.81172443012736,
+            "currency": "USD"
+        },
+        {
+            "amount": 413.77080405685706,
+            "currency": "USD"
+        },
+        {
+            "amount": 414.0633857257195,
+            "currency": "USD"
+        }
+    ]
+}

@@ -1,0 +1,12 @@
+{
+    "id": 23,
+    "name": "test_file_23",
+    "active": true,
+    "scores": [
+        98,
+        28,
+        42,
+        22,
+        19
+    ]
+}

@@ -1,0 +1,30 @@
+{
+    "product": {
+        "id": 50,
+        "name": "Product_50",
+        "price": 29.671569676433258,
+        "in_stock": true
+    },
+    "reviews": [
+        {
+            "user": "User_0",
+            "rating": 5
+        },
+        {
+            "user": "User_1",
+            "rating": 2
+        },
+        {
+            "user": "User_2",
+            "rating": 3
+        },
+        {
+            "user": "User_3",
+            "rating": 1
+        },
+        {
+            "user": "User_4",
+            "rating": 1
+        }
+    ]
+}

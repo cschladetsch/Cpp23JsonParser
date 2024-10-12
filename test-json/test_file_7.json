@@ -1,0 +1,28 @@
+{
+    "company": {
+        "name": "Company_7",
+        "employees": 148,
+        "departments": [
+            {
+                "name": "Department_0",
+                "budget": 15646.364946557711
+            },
+            {
+                "name": "Department_1",
+                "budget": 39486.800955072555
+            },
+            {
+                "name": "Department_2",
+                "budget": 21107.606398046417
+            },
+            {
+                "name": "Department_3",
+                "budget": 12961.190848721702
+            },
+            {
+                "name": "Department_4",
+                "budget": 19217.626070571456
+            }
+        ]
+    }
+}
