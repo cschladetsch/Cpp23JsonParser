@@ -23,7 +23,7 @@ This project implements a fast and efficient JSON parser in C++23. It provides a
 
 1. Clone the repository:
    ```
-   git clone https://github.com/yourusername/fast-cpp23-json-parser.git
+   git clone https://github.com/cschladetsch/fast-cpp23-json-parser.git
    cd fast-cpp23-json-parser
    ```
 
@@ -46,6 +46,14 @@ This project implements a fast and efficient JSON parser in C++23. It provides a
    ```
    make test
    ```
+
+### Or just use 'r'
+
+```bash
+$ ./r
+```
+
+Will clean and build and run all tests.
 
 ## Usage
 
