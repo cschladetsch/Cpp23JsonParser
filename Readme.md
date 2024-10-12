@@ -4,6 +4,43 @@
 
 This project implements a fast and efficient JSON parser in C++23. It provides a lightweight, header-only library for parsing JSON documents with a focus on performance and modern C++ features.
 
+## Sample
+
+```bash
+❯ ./r
+===> Removing existing build directory...
+===> Creating build directory...
+===> Running CMake...
+-- The C compiler identification is GNU 13.1.0
+-- The CXX compiler identification is GNU 13.1.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/gcc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/g++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Configuring done (5.4s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/xian/local/repos/Cpp23Json/build
+===> Building the project...
+[ 16%] Building CXX object CMakeFiles/json_parser_lib.dir/json_parser.cpp.o
+[ 33%] Linking CXX static library libjson_parser_lib.a
+[ 33%] Built target json_parser_lib
+[ 50%] Building CXX object CMakeFiles/json_parser_driver.dir/main.cpp.o
+[ 66%] Linking CXX executable json_parser_driver
+[ 66%] Built target json_parser_driver
+[ 83%] Building CXX object CMakeFiles/test_json_parser.dir/test_json_parser.cpp.o
+[100%] Linking CXX executable test_json_parser
+[100%] Built target test_json_parser
+===> Running tests...
+===============================================================================
+All tests passed (3 assertions in 1 test case)
+```
+
 ## Features
 
 - Compliant with JSON specification
