@@ -23,3 +23,4 @@ add_test(NAME json_parser_test COMMAND test_json_parser)
 
 # Optional: Extra warnings
 add_compile_options(-Wall -Wextra -Wpedantic)
+
