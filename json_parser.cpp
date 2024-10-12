@@ -2,6 +2,7 @@
 #include <stdexcept>
 #include <cctype>      // for isdigit
 #include <cstring>     // for strncmp
+#include <vector>      // for std::vector
 
 namespace json {
 
@@ -11,13 +12,6 @@ static std::string parse_string(const char* json, size_t& pos);
 static double parse_number(const char* json, size_t& pos);
 static Value parse_array(const char* json, size_t& pos);
 static Value parse_object(const char* json, size_t& pos);
-
-// Skip whitespace
-static void skip_whitespace(const char* json, size_t& pos) {
-    while (std::isspace(json[pos])) {
-        pos++;
-    }
-}
 
 // Parse a JSON string
 static std::string parse_string(const char* json, size_t& pos) {
@@ -48,5 +42,25 @@ static Value parse_array(const char* json, size_t& pos) {
         throw std::runtime_error("Expected '[' at the beginning of array.");
     }
     pos++;  // Skip the opening bracket
-   
+
+    std::vector<Value> array;
+
+    while (json[pos] != ']') {
+        Parser::skip_whitespace(json, pos);
+        array.push_back(parse_value(json, pos));  // Parse the array elements
+
+        Parser::skip_whitespace(json, pos);
+        if (json[pos] == ',') {
+            pos++;  // Skip the comma between array elements
+            Parser::skip_whitespace(json, pos);
+        } else if (json[pos] != ']') {
+            throw std::runtime_error("Expected ']' or ',' in array.");
+        }
+    }
+    pos++;  // Skip the closing bracket
+
+    return Value(array);  // Assuming Value has a constructor for std::vector<Value>
+}
+
+} // namespace json
 

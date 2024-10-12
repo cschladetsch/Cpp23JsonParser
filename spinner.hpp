@@ -1,5 +1,3 @@
-
-// spinner.hpp
 #ifndef SPINNER_HPP
 #define SPINNER_HPP
 
