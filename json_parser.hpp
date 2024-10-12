@@ -1,59 +1,40 @@
 #pragma once
-
 #include <string>
-#include <vector>
-#include <unordered_map>
 #include <variant>
-#include <string_view>
+#include <vector>
+#include <map>
 
 namespace json {
 
-class Value;
+    // JSON value class representing different possible types
+    class Value {
+    public:
+        using Array = std::vector<Value>;
+        using Object = std::map<std::string, Value>;
 
-using Object = std::unordered_map<std::string, Value>;
-using Array = std::vector<Value>;
+        // Constructors for different JSON value types
+        Value() = default;
+        Value(double num) : value_(num) {}
+        Value(const std::string& str) : value_(str) {}
+        Value(bool b) : value_(b) {}
+        Value(const Array& arr) : value_(arr) {}
+        Value(const Object& obj) : value_(obj) {}
+        Value(std::nullptr_t) : value_(nullptr) {}
 
-class Value {
-public:
-    using variant_type = std::variant<std::nullptr_t, bool, double, std::string, Array, Object>;
-    
-    Value() : m_value(nullptr) {}
-    Value(std::nullptr_t) : m_value(nullptr) {}
-    Value(bool b) : m_value(b) {}
-    Value(double d) : m_value(d) {}
-    Value(const std::string& s) : m_value(s) {}
-    Value(const Array& a) : m_value(a) {}
-    Value(const Object& o) : m_value(o) {}
+        // Template method to get the stored value with type T
+        template<typename T>
+        const T& get() const {
+            return std::get<T>(value_);
+        }
 
-    template<typename T>
-    const T& get() const {
-        return std::get<T>(m_value);
-    }
+    private:
+        std::variant<std::nullptr_t, double, std::string, bool, Array, Object> value_;
+    };
 
-    const variant_type& get_variant() const { return m_value; }
+    // JSON parser class
+    class Parser {
+    public:
+        static Value parse(const std::string& json);
+    };
+}
 
-private:
-    variant_type m_value;
-};
-
-class Parser {
-public:
-    static Value parse(std::string_view json);
-
-private:
-    Parser(std::string_view json);
-    Value parse_value();
-    Value parse_null();
-    Value parse_bool();
-    Value parse_string();
-    Value parse_number();
-    Value parse_array();
-    Value parse_object();
-    void skip_whitespace();
-    char current() const;
-
-    std::string_view m_json;
-    size_t m_pos;
-};
-
-} // namespace json
