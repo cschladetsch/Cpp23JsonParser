@@ -1,8 +1,9 @@
-#include "json_parser.hpp"
-#include "rang.hpp"
-#include "./nhomann/json.hpp"
 #include <iostream>
 #include <chrono>
+
+#include "json_parser.hpp"
+#include "nhomann/json.hpp"
+#include "rang.hpp"
 
 using namespace std;
 
@@ -15,7 +16,7 @@ void benchmark_custom_parser() {
         "age": 30,
         "is_student": false
     })";
-    json::Value parsed = json::Parser::parse(json_string);
+    json::Value parsed = json::Parser::parse(json_string);  // Ensure this works
 
     auto end = chrono::high_resolution_clock::now();
     cout << rang::fg::green << "Custom JSON parser took: "
@@ -48,4 +49,3 @@ int main() {
 
     return 0;
 }
-

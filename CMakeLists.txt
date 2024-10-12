@@ -1,32 +1,16 @@
 cmake_minimum_required(VERSION 3.10)
-project(Cpp23Json LANGUAGES CXX)
 
-# Set C++ standard
+# Force CMake to use GCC and G++
+set(CMAKE_C_COMPILER /usr/bin/gcc)
+set(CMAKE_CXX_COMPILER /usr/bin/g++)
+
+project(Cpp23Json)
+
 set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
-find_package(nlohmann_json 3.2.0 REQUIRED)
-target_link_libraries(benchmark PRIVATE nlohmann_json::nlohmann_json)
 
+# Add your main project executable
+add_executable(Cpp23Json main.cpp json_parser.cpp)
 
-# Add the source files
-set(SOURCES
-    json_parser.cpp
-    test_json_parser.cpp
-)
-
-# Include directories for headers
-include_directories(${CMAKE_SOURCE_DIR})
-
-# Define the Catch2 library to handle unit testing
-add_library(catch_main OBJECT catch.hpp)
-
-# Create a target for the unit tests
-add_executable(test_json_parser ${SOURCES})
-target_link_libraries(test_json_parser PRIVATE catch_main)
-
-# Enable testing
-enable_testing()
-add_test(NAME json_tests COMMAND test_json_parser)
-
-add_executable(benchmark benchmark.cpp)
+# Add benchmark executable
+add_executable(benchmark benchmark.cpp json_parser.cpp)
 

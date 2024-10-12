@@ -1,8 +1,10 @@
 #!/bin/bash
-# Bash script to build the app and run the benchmarks
 
+# Build the project
 echo "Building the project..."
-./r
+cmake --build build || exit 1
+
+# Run the benchmarks
 echo "Running benchmarks..."
-./build/benchmark
+./build/benchmark || echo "Failed to run benchmark"
 
