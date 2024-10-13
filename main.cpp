@@ -6,6 +6,8 @@
 #include "json.hpp"
 #include "json_parser.hpp"
 
+void print_current_datetime();
+
 namespace fs = std::filesystem;
 using nlohmann_json = nlohmann::json;
 
@@ -59,6 +61,8 @@ void benchmark_nlohmann(const std::string& filename) {
     }
 }
 int main(int argc, char* argv[]) {
+    std::cout << "Built " << __DATE__ << " T " << __TIME__ << std::endl;
+
     if (argc != 3) {
         std::cerr << "Usage: " << argv[0] << " <custom|nlohmann> <json_directory_path>" << std::endl;
         return 1;

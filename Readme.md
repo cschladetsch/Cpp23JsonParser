@@ -133,6 +133,10 @@ The project uses custom build scripts to simplify the building process.
 
 ## Running Benchmarks
 
+Here's the output of running each parser (this one, Nholmann, and Python's) 1500 times:
+
+![results](./resouorces/9.png)
+
 ### Using the Python Benchmark Script (`pyb.py`)
 
 The `pyb.py` script runs benchmarks on the JSON parser, calculates mean and standard deviation, and displays results with fancy colors and symbols. It can also generate a pie chart of the results.

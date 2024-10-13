@@ -5,7 +5,9 @@ import time
 import os
 from termcolor import colored
 
-def run_cpp_benchmark(parser_type, iterations=10):
+Iterations=10000
+
+def run_cpp_benchmark(parser_type, iterations=Iterations):
     all_times = []
     for _ in range(iterations):
         result = subprocess.run(['./build/Cpp23Json', parser_type, './test-json'], 
@@ -22,7 +24,7 @@ def run_cpp_benchmark(parser_type, iterations=10):
         all_times.extend(times)
     return all_times
 
-def run_python_benchmark(iterations=10):
+def run_python_benchmark(iterations=Iterations):
     all_times = []
     for _ in range(iterations):
         times = []
@@ -51,9 +53,9 @@ def print_statistics(name, times):
 if __name__ == "__main__":
     print(colored("Running benchmarks...", "yellow", attrs=["bold"]))
 
-    custom_times = run_cpp_benchmark('custom', iterations=10)
-    nlohmann_times = run_cpp_benchmark('nlohmann', iterations=10)
-    python_times = run_python_benchmark(iterations=10)
+    custom_times = run_cpp_benchmark('custom')
+    nlohmann_times = run_cpp_benchmark('nlohmann')
+    python_times = run_python_benchmark()
 
     print_statistics("Custom C++", custom_times)
     print_statistics("Nlohmann", nlohmann_times)
