@@ -135,7 +135,7 @@ The project uses custom build scripts to simplify the building process.
 
 Here's the output of running each parser (this one, Nholmann, and Python's) 1500 times:
 
-![results](./resouorces/9.png)
+![results](./resources/9.png)
 
 ### Using the Python Benchmark Script (`pyb.py`)
 
