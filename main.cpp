@@ -1,49 +1,60 @@
 #include <iostream>
 #include <fstream>
-#include "./nhomann/json.hpp" // Include nlohmann JSON
-#include "./json_parser.hpp" // Include your custom JSON parser
+#include <chrono>
+#include <string>
+#include <filesystem>
+#include "json.hpp"
+#include "json_parser.hpp"
 
-using json = nlohmann::json;
+namespace fs = std::filesystem;
+using nlohmann_json = nlohmann::json;
 
-void parse_with_nlohmann(const std::string& file_path) {
-    std::ifstream file(file_path);
-    json j;
-    file >> j;
-    // Do something with the parsed JSON
-    std::cout << "Parsed with nlohmann JSON: " << j.dump().substr(0, 50) << std::endl;
+void benchmark_custom(const std::string& filename) {
+    std::ifstream file(filename);
+    std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+    
+    auto start = std::chrono::high_resolution_clock::now();
+    custom_json::Value result = custom_json::parse(content);
+    auto end = std::chrono::high_resolution_clock::now();
+
+    std::chrono::duration<double, std::milli> duration = end - start;
+    std::cout << filename << ": " << duration.count() << " ms" << std::endl;
 }
 
-void parse_with_custom_parser(const std::string& file_path) {
-    // Call your custom parser
-    std::ifstream file(file_path);
-    custom_json::Value result = custom_json::parse(file);
-    // Do something with the parsed JSON
-    std::cout << "Parsed with Custom JSON Parser: " << result << std::endl;
+void benchmark_nlohmann(const std::string& filename) {
+    std::ifstream file(filename);
+    
+    auto start = std::chrono::high_resolution_clock::now();
+    try {
+        nlohmann_json j = nlohmann_json::parse(file);
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double, std::milli> duration = end - start;
+        std::cout << filename << ": " << duration.count() << " ms" << std::endl;
+    } catch (const nlohmann_json::parse_error& e) {
+        std::cerr << "Error parsing " << filename << ": " << e.what() << std::endl;
+    }
 }
 
 int main(int argc, char* argv[]) {
-    if (argc < 3) {
-        std::cerr << "Usage: " << argv[0] << " --parser [custom|nlohmann] <file.json>" << std::endl;
+    if (argc != 3) {
+        std::cerr << "Usage: " << argv[0] << " <custom|nlohmann> <json_directory_path>" << std::endl;
         return 1;
     }
 
-    std::string parser_choice = argv[1];
-    std::string file_path = argv[2];
+    std::string parser_type = argv[1];
+    std::string directory_path = argv[2];
 
-    if (parser_choice == "--parser" && argc > 2) {
-        std::string parser_type = argv[2];
-
-        if (parser_type == "nlohmann") {
-            parse_with_nlohmann(file_path);
-        } else if (parser_type == "custom") {
-            parse_with_custom_parser(file_path);
-        } else {
-            std::cerr << "Unknown parser type: " << parser_type << std::endl;
-            return 1;
+    for (const auto & entry : fs::directory_iterator(directory_path)) {
+        if (entry.path().extension() == ".json") {
+            if (parser_type == "custom") {
+                benchmark_custom(entry.path().string());
+            } else if (parser_type == "nlohmann") {
+                benchmark_nlohmann(entry.path().string());
+            } else {
+                std::cerr << "Invalid parser type. Use 'custom' or 'nlohmann'." << std::endl;
+                return 1;
+            }
         }
-    } else {
-        std::cerr << "Invalid arguments." << std::endl;
-        return 1;
     }
 
     return 0;

@@ -8,7 +8,7 @@ from termcolor import colored
 
 # Directory where JSON files are stored
 json_dir = "./test-json"
-cpp_executable = "./build/Cpp23Json"  # Path to your C++ executable (change this if needed)
+cpp_executable = "./build/Cpp23Json"  # Path to your C++ executable
 
 # Check if the directory contains any JSON files
 try:
@@ -21,19 +21,18 @@ except Exception as e:
     print(f"Error accessing {json_dir}: {e}")
     exit(1)
 
-# Function to benchmark the C++ JSON parser
-def benchmark_cpp_json_file(file_path):
+# Function to benchmark the C++ JSON parser (both custom and nlohmann)
+def benchmark_cpp_json_file(file_path, parser_type):
     start_time = time.time()
     try:
-        # Call the C++ executable to process the JSON file
-        result = subprocess.run([cpp_executable, file_path], capture_output=True, text=True)
+        result = subprocess.run([cpp_executable, parser_type, file_path], capture_output=True, text=True)
         if result.returncode != 0:
             print(colored(f"Error running C++ parser on {file_path}: {result.stderr}", "red"))
             return 0
+        return float(result.stdout.strip())  # Return the time measured by C++ code
     except Exception as e:
+        print(colored(f"Error: {e}", "red"))
         return 0
-    end_time = time.time()
-    return (end_time - start_time) * 1000  # Return time in milliseconds
 
 # Function to benchmark the Python JSON parser
 def benchmark_python_json_file(file_path):
@@ -42,12 +41,13 @@ def benchmark_python_json_file(file_path):
         with open(file_path, 'r') as f:
             data = json.load(f)  # Use Python's json module
     except Exception as e:
+        print(colored(f"Error processing file {file_path}: {e}", "red"))
         return 0
     end_time = time.time()
     return (end_time - start_time) * 1000  # Return time in milliseconds
 
 # Run benchmarks for a specified duration and collect timings
-def run_benchmarks(duration_seconds=90, parser='cpp'):
+def run_benchmarks(duration_seconds=90, parser='custom'):
     times = []
     start_time = time.time()
 
@@ -55,8 +55,8 @@ def run_benchmarks(duration_seconds=90, parser='cpp'):
         for file_name in os.listdir(json_dir):
             if file_name.endswith(".json"):
                 file_path = os.path.join(json_dir, file_name)
-                if parser == 'cpp':
-                    elapsed_time = benchmark_cpp_json_file(file_path)
+                if parser in ['custom', 'nlohmann']:
+                    elapsed_time = benchmark_cpp_json_file(file_path, parser)
                 elif parser == 'python':
                     elapsed_time = benchmark_python_json_file(file_path)
 
@@ -68,7 +68,7 @@ def run_benchmarks(duration_seconds=90, parser='cpp'):
 
     return times
 
-# Function to calculate and display benchmark results in colorful ASCII format (summary only)
+# Function to calculate and display benchmark results in colorful ASCII format
 def display_summary(times, parser_type):
     if len(times) == 0:
         print(colored(f"No valid timings collected for {parser_type} parser.", "red"))
@@ -94,11 +94,9 @@ def display_summary(times, parser_type):
 
 # Main function to parse arguments and run the benchmark
 if __name__ == "__main__":
-    print("Starting script...")  # Immediate check
-
-    parser = argparse.ArgumentParser(description="Run JSON benchmark for C++ and Python parsers.")
+    parser = argparse.ArgumentParser(description="Run JSON benchmark for custom C++, nlohmann/json, and Python parsers.")
     parser.add_argument("--duration", type=int, default=90, help="Duration of the benchmark in seconds.")
-    parser.add_argument("--parser", type=str, default="cpp", choices=["cpp", "python"], help="Select the parser to benchmark ('cpp' or 'python').")
+    parser.add_argument("--parser", type=str, default="custom", choices=["custom", "nlohmann", "python"], help="Select the parser to benchmark ('custom', 'nlohmann', or 'python').")
     
     args = parser.parse_args()
 
