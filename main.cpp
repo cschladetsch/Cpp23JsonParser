@@ -11,14 +11,23 @@ using nlohmann_json = nlohmann::json;
 
 void benchmark_custom(const std::string& filename) {
     std::ifstream file(filename);
+    if (!file.is_open()) {
+        std::cerr << "Error: Could not open file " << filename << std::endl;
+        return;
+    }
     std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
     
+    std::cout << "Parsing file: " << filename << " (size: " << content.size() << " bytes)" << std::endl;
+    
     auto start = std::chrono::high_resolution_clock::now();
-    custom_json::Value result = custom_json::parse(content);
-    auto end = std::chrono::high_resolution_clock::now();
-
-    std::chrono::duration<double, std::milli> duration = end - start;
-    std::cout << filename << ": " << duration.count() << " ms" << std::endl;
+    try {
+        custom_json::Value result = custom_json::parse(content);
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double, std::milli> duration = end - start;
+        std::cout << filename << ": " << duration.count() << std::endl;
+    } catch (const std::exception& e) {
+        std::cerr << "Error parsing " << filename << ": " << e.what() << std::endl;
+    }
 }
 
 void benchmark_nlohmann(const std::string& filename) {
@@ -29,7 +38,7 @@ void benchmark_nlohmann(const std::string& filename) {
         nlohmann_json j = nlohmann_json::parse(file);
         auto end = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double, std::milli> duration = end - start;
-        std::cout << filename << ": " << duration.count() << " ms" << std::endl;
+        std::cout << filename << ": " << duration.count() << std::endl;
     } catch (const nlohmann_json::parse_error& e) {
         std::cerr << "Error parsing " << filename << ": " << e.what() << std::endl;
     }
