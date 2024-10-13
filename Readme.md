@@ -1,5 +1,9 @@
 # Cpp23Json Project
 
+## Sample
+
+![anim](./resources/Animation.gif)
+
 ## Table of Contents
 
 - [Introduction](#introduction)
