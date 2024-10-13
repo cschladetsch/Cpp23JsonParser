@@ -1,51 +1,50 @@
 #include <iostream>
-#include <chrono>
+#include <fstream>
+#include "./nhomann/json.hpp" // Include nlohmann JSON
+#include "./json_parser.hpp" // Include your custom JSON parser
 
-#include "json_parser.hpp"
-#include "nhomann/json.hpp"
-#include "rang.hpp"
+using json = nlohmann::json;
 
-using namespace std;
-
-void benchmark_custom_parser() {
-    auto start = chrono::high_resolution_clock::now();
-
-    // Custom JSON parsing
-    std::string json_string = R"({
-        "name": "Alice",
-        "age": 30,
-        "is_student": false
-    })";
-    json::Value parsed = json::Parser::parse(json_string);  // Ensure this works
-
-    auto end = chrono::high_resolution_clock::now();
-    cout << rang::fg::green << "Custom JSON parser took: "
-         << chrono::duration_cast<chrono::microseconds>(end - start).count()
-         << " microseconds" << rang::style::reset << endl;
+void parse_with_nlohmann(const std::string& file_path) {
+    std::ifstream file(file_path);
+    json j;
+    file >> j;
+    // Do something with the parsed JSON
+    std::cout << "Parsed with nlohmann JSON: " << j.dump().substr(0, 50) << std::endl;
 }
 
-void benchmark_nlohmann_parser() {
-    auto start = chrono::high_resolution_clock::now();
-
-    // nlohmann JSON parsing
-    std::string json_string = R"({
-        "name": "Alice",
-        "age": 30,
-        "is_student": false
-    })";
-    auto parsed = nlohmann::json::parse(json_string);
-
-    auto end = chrono::high_resolution_clock::now();
-    cout << rang::fg::yellow << "nlohmann::json parser took: "
-         << chrono::duration_cast<chrono::microseconds>(end - start).count()
-         << " microseconds" << rang::style::reset << endl;
+void parse_with_custom_parser(const std::string& file_path) {
+    // Call your custom parser
+    std::ifstream file(file_path);
+    custom_json::Value result = custom_json::parse(file);
+    // Do something with the parsed JSON
+    std::cout << "Parsed with Custom JSON Parser: " << result << std::endl;
 }
 
-int main() {
-    cout << rang::fg::blue << "Starting JSON benchmarks..." << rang::style::reset << endl;
+int main(int argc, char* argv[]) {
+    if (argc < 3) {
+        std::cerr << "Usage: " << argv[0] << " --parser [custom|nlohmann] <file.json>" << std::endl;
+        return 1;
+    }
 
-    benchmark_custom_parser();
-    benchmark_nlohmann_parser();
+    std::string parser_choice = argv[1];
+    std::string file_path = argv[2];
+
+    if (parser_choice == "--parser" && argc > 2) {
+        std::string parser_type = argv[2];
+
+        if (parser_type == "nlohmann") {
+            parse_with_nlohmann(file_path);
+        } else if (parser_type == "custom") {
+            parse_with_custom_parser(file_path);
+        } else {
+            std::cerr << "Unknown parser type: " << parser_type << std::endl;
+            return 1;
+        }
+    } else {
+        std::cerr << "Invalid arguments." << std::endl;
+        return 1;
+    }
 
     return 0;
 }

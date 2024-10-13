@@ -58,7 +58,7 @@ Cpp23Json/
 1. **Clone the Repository**:
 
    ```bash
-   git clone https://github.com/yourusername/Cpp23Json.git
+   git clone https://github.com/cschladetsch/Cpp23Json.git
    cd Cpp23Json
    ```
 
